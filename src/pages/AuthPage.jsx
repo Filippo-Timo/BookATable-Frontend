@@ -1,5 +1,8 @@
 import { useState } from "react"
 import { Container, Row, Col, Form, Button } from "react-bootstrap"
+import { useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
+import { loginApi, registerUserApi } from "../api/authApi"
 
 function AuthPage() {
     // Gestisce se mostrare il form di login o di registrazione. Di default mostra il login.
@@ -15,27 +18,48 @@ function AuthPage() {
         city: ""
     })
 
+    // Salvo il messaggio di errore da mostrare all'utente se la chiamata al backend fallisce.
+    const [error, setError] = useState(null)
+
+    const { login } = useAuth()
+    const navigate = useNavigate()
+
     // Ogni volta che l'utente scrive in un campo, aggiorna solo quel campo nel formData usando il 
     // name dell'input come chiave. Il ...formData serve per non perdere i valori degli altri campi.
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
+    // Chiamo il backend con email e password, salvo il token nel context e nel localStorage e mando l'utente alla homepage in caso di successo
     const handleLogin = async (e) => {
         e.preventDefault()
-        console.log("login", formData)
+        setError(null)
+        try {
+            const data = await loginApi({ email: formData.email, password: formData.password })
+            login(null, data.accessToken)
+            navigate("/")
+        } catch (err) {
+            setError(err.message)
+        }
     }
 
+    // Chiamo il backend con tutti i dati del form, se ha successo mando l'utente nel form di login altrimenti mostro un errore
     const handleRegister = async (e) => {
         e.preventDefault()
-        console.log("register", formData)
+        setError(null)
+        try {
+            await registerUserApi(formData)
+            setMode("login")
+        } catch (err) {
+            setError(err.message)
+        }
     }
 
     return (
         <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center" style={{ background: "#f1f3f6" }}>
             <Row className="shadow rounded overflow-hidden bg-white" style={{ maxWidth: 800, width: "100%" }}>
 
-                {/* Pannello di sinistra */}
+                {/* Pannello sinistro */}
                 <Col md={5} className="d-flex flex-column align-items-center justify-content-center p-5 text-white" style={{ background: "linear-gradient(145deg, #c8102e, #6d0017)" }}>
                     <div style={{ fontSize: 72, marginBottom: 20 }}>🍷</div>
                     <h2 className="fw-bold mb-3">Bentornato!</h2>
@@ -44,13 +68,12 @@ function AuthPage() {
                     </p>
                 </Col>
 
-                {/* Pannello di destra */}
+                {/* Pannello destro */}
                 <Col md={7} className="d-flex align-items-center justify-content-center p-5">
                     <div style={{ width: "100%", maxWidth: 380 }}>
 
                         {/* Toggle Login / Register */}
                         <div className="d-flex bg-light rounded p-1 mb-4">
-                            {/* Crea i due bottoni con un .map() e al click cambia il mode. */}
                             {["login", "register"].map((m) => (
                                 <button
                                     key={m}
@@ -80,6 +103,11 @@ function AuthPage() {
                                     <Form.Label className="small fw-bold text-secondary text-uppercase">Password</Form.Label>
                                     <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" required />
                                 </Form.Group>
+                                {error && (
+                                    <div className="alert alert-danger py-2 mb-3" style={{ fontSize: 13 }}>
+                                        {error}
+                                    </div>
+                                )}
                                 <Button type="submit" className="w-100 py-2 fw-bold" style={{ background: "#c8102e", border: "none" }}>
                                     Accedi →
                                 </Button>
@@ -119,7 +147,13 @@ function AuthPage() {
                                 <Form.Group className="mb-4">
                                     <Form.Label className="small fw-bold text-secondary text-uppercase">Città</Form.Label>
                                     <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} placeholder="Roma" required />
+                                    {/* Mostro il messaggio di errore in rosso solo se error non è null. */}
                                 </Form.Group>
+                                {error && (
+                                    <div className="alert alert-danger py-2 mb-3" style={{ fontSize: 13 }}>
+                                        {error}
+                                    </div>
+                                )}
                                 <Button type="submit" className="w-100 py-2 fw-bold" style={{ background: "#c8102e", border: "none" }}>
                                     Crea account →
                                 </Button>
