@@ -50,7 +50,7 @@ function AppNavbar() {
                         className="fw-semibold"
                         onClick={handleLogout}
                     >
-                        Esci
+                        Logout
                     </Button>
                 </div>
             </Container>
