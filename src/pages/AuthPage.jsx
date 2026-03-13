@@ -2,7 +2,10 @@ import { useState } from "react"
 import { Container, Row, Col, Form, Button } from "react-bootstrap"
 
 function AuthPage() {
+    // Gestisce se mostrare il form di login o di registrazione. Di default mostra il login.
     const [mode, setMode] = useState("login")
+
+    // Un unico oggetto che contiene tutti i campi del form.
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -12,6 +15,8 @@ function AuthPage() {
         city: ""
     })
 
+    // Ogni volta che l'utente scrive in un campo, aggiorna solo quel campo nel formData usando il 
+    // name dell'input come chiave. Il ...formData serve per non perdere i valori degli altri campi.
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -45,6 +50,7 @@ function AuthPage() {
 
                         {/* Toggle Login / Register */}
                         <div className="d-flex bg-light rounded p-1 mb-4">
+                            {/* Crea i due bottoni con un .map() e al click cambia il mode. */}
                             {["login", "register"].map((m) => (
                                 <button
                                     key={m}
@@ -63,6 +69,7 @@ function AuthPage() {
                         </div>
 
                         {/* Form di Login */}
+                        {/* Mostra il form di login in base al mode. */}
                         {mode === "login" && (
                             <Form onSubmit={handleLogin}>
                                 <Form.Group className="mb-3">
@@ -80,6 +87,7 @@ function AuthPage() {
                         )}
 
                         {/* Form di Registrazione */}
+                        {/* Mostra il form di Register in base al mode. */}
                         {mode === "register" && (
                             <Form onSubmit={handleRegister}>
                                 <Row className="g-2">
