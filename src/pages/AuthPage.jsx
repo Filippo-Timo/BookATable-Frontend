@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Container, Row, Col, Form, Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
-import { loginApi, registerUserApi } from "../api/authApi"
+import { loginApi, registerUserApi, getMeApi } from "../api/authApi"
 
 function AuthPage() {
     // Gestisce se mostrare il form di login o di registrazione. Di default mostra il login.
@@ -30,13 +30,15 @@ function AuthPage() {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
-    // Chiamo il backend con email e password, salvo il token nel context e nel localStorage e mando l'utente alla homepage in caso di successo
+    // Chiamo il backend con email e password, recupero i dati dell'utente con getMeApi,
+    // salvo il token e i dati utente nel context e nel localStorage e mando l'utente alla homepage
     const handleLogin = async (e) => {
         e.preventDefault()
         setError(null)
         try {
             const data = await loginApi({ email: formData.email, password: formData.password })
-            login(null, data.accessToken)
+            const userData = await getMeApi(data.accessToken)
+            login(userData, data.accessToken)
             navigate("/")
         } catch (err) {
             setError(err.message)
@@ -103,6 +105,7 @@ function AuthPage() {
                                     <Form.Label className="small fw-bold text-secondary text-uppercase">Password</Form.Label>
                                     <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" required />
                                 </Form.Group>
+                                {/* Mostro il messaggio di errore in rosso solo se error non è null. */}
                                 {error && (
                                     <div className="alert alert-danger py-2 mb-3" style={{ fontSize: 13 }}>
                                         {error}
@@ -147,8 +150,8 @@ function AuthPage() {
                                 <Form.Group className="mb-4">
                                     <Form.Label className="small fw-bold text-secondary text-uppercase">Città</Form.Label>
                                     <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} placeholder="Roma" required />
-                                    {/* Mostro il messaggio di errore in rosso solo se error non è null. */}
                                 </Form.Group>
+                                {/* Mostro il messaggio di errore in rosso solo se error non è null. */}
                                 {error && (
                                     <div className="alert alert-danger py-2 mb-3" style={{ fontSize: 13 }}>
                                         {error}

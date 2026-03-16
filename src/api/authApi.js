@@ -9,7 +9,7 @@ export const loginApi = async (credentials) => {
     body: JSON.stringify(credentials)
   })
 
-//   Gestisco eventuali errori
+  // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
     throw new Error(error.message)
@@ -26,7 +26,7 @@ export const registerUserApi = async (userData) => {
     body: JSON.stringify(userData)
   })
 
-  //   Gestisco eventuali errori
+  // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
     throw new Error(error.message)
@@ -43,7 +43,22 @@ export const registerRestaurantOwnerApi = async (userData) => {
     body: JSON.stringify(userData)
   })
 
-  //   Gestisco eventuali errori
+  // Gestisco eventuali errori
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message)
+  }
+
+  return response.json()
+}
+
+// Fetch per recuperare i dati dell'utente loggato
+export const getMeApi = async (token) => {
+  const response = await fetch(`${BASE_URL}/users/me`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+
+  // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
     throw new Error(error.message)
