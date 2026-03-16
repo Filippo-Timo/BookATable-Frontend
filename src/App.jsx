@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import AuthPage from "./pages/AuthPage"
+import HomePage from "./pages/HomePage"
 import ProtectedRoute from "./components/ProtectedRoute"
 import AppNavbar from "./components/AppNavbar"
 
@@ -12,7 +13,7 @@ function App() {
         <Route path="/" element={
           <ProtectedRoute>
             <AppNavbar />
-            <h1>HomePage</h1>
+            <HomePage />
           </ProtectedRoute>
         } />
       </Routes>
