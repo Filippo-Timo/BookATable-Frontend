@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { Container, Row, Col, Form, InputGroup } from "react-bootstrap"
 import { useAuth } from "../context/AuthContext"
 import { getAllRestaurantsApi } from "../api/restaurantApi"
+import RestaurantCard from "../components/RestaurantCard"
 
 function HomePage() {
     const [restaurants, setRestaurants] = useState([])
@@ -52,7 +53,7 @@ function HomePage() {
                 <Row className="g-4">
                     {filtered.map((restaurant) => (
                         <Col key={restaurant.id} xs={12} sm={6} lg={4}>
-                            <p>{restaurant.name}</p>
+                            <RestaurantCard restaurant={restaurant} />
                         </Col>
                     ))}
                 </Row>

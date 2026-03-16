@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import AuthPage from "./pages/AuthPage"
-import HomePage from "./pages/HomePage"
 import ProtectedRoute from "./components/ProtectedRoute"
 import AppNavbar from "./components/AppNavbar"
+import HomePage from "./pages/HomePage"
 
 function App() {
 
