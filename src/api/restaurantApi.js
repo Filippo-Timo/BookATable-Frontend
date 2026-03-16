@@ -22,7 +22,42 @@ export const getRestaurantByIdApi = async (id, token) => {
     headers: { Authorization: `Bearer ${token}` }
   })
 
-  //   Gestisco eventuali errori
+  // Gestisco eventuali errori
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message)
+  }
+
+  return response.json()
+}
+
+// Chiamata per ottenere i ristoranti dell'owner loggato
+export const getMyRestaurantsApi = async (token) => {
+  const response = await fetch(`${BASE_URL}/restaurants/my`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+
+  // Gestisco eventuali errori
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.message)
+  }
+
+  return response.json()
+}
+
+// Chiamata per fare l'upload dell'immagine del ristorante
+export const uploadRestaurantImageApi = async (id, imageFile, token) => {
+  const formData = new FormData()
+  formData.append("image", imageFile)
+
+  const response = await fetch(`${BASE_URL}/restaurants/${id}/image`, {
+    method: "PATCH",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData
+  })
+
+  // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
     throw new Error(error.message)
