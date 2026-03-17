@@ -18,25 +18,24 @@ function RestaurantCard({ restaurant }) {
             />
 
             <Card.Body className="p-3">
-                {/* Nome e città */}
-                <Card.Title className="fw-bold mb-1" style={{ fontSize: 16, color: "#1a1a2e" }}>
-                    {restaurant.name}
-                </Card.Title>
-                <p className="text-muted mb-2" style={{ fontSize: 13 }}>
-                    📍 {restaurant.city}
-                </p>
 
-                {/* Tipologia */}
-                {restaurant.type && (
-                    <Badge style={{ background: "#c8102e", fontSize: 11 }}>
-                        {restaurant.type}
+                {/* Tipologia ristorante */}
+                {restaurant.restaurantType && (
+                    <Badge className="mb-2" style={{ background: "#c8102e", fontSize: 11 }}>
+                        {restaurant.restaurantType}
                     </Badge>
                 )}
 
-                {/* Posti disponibili */}
-                <p className="mb-0 mt-2" style={{ fontSize: 12, color: "#6b7280" }}>
-                    🪑 {restaurant.maxSeats} posti totali
+                {/* Nome ristorante */}
+                <Card.Title className="fw-bold mb-1" style={{ fontSize: 16, color: "#1a1a2e" }}>
+                    {restaurant.name}
+                </Card.Title>
+
+                {/* Città e indirizzo */}
+                <p className="text-muted mb-0" style={{ fontSize: 13 }}>
+                    📍 {restaurant.city}, {restaurant.address}
                 </p>
+
             </Card.Body>
         </Card>
     )
