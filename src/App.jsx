@@ -3,6 +3,7 @@ import AuthPage from "./pages/AuthPage"
 import ProtectedRoute from "./components/ProtectedRoute"
 import AppNavbar from "./components/AppNavbar"
 import HomePage from "./pages/HomePage"
+import RestaurantDetailPage from "./pages/RestaurantDetailPage"
 
 function App() {
 
@@ -14,6 +15,12 @@ function App() {
           <ProtectedRoute>
             <AppNavbar />
             <HomePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/restaurants/:id" element={
+          <ProtectedRoute>
+            <AppNavbar />
+            <RestaurantDetailPage />
           </ProtectedRoute>
         } />
       </Routes>
