@@ -37,8 +37,8 @@ export const createReviewApi = async (restaurantId, body, token) => {
 }
 
 // Chiamata per modificare una recensione
-export const updateReviewApi = async (reviewId, body, token) => {
-  const response = await fetch(`${BASE_URL}/reviews/${reviewId}`, {
+export const updateReviewApi = async (restaurantId, reviewId, body, token) => {
+  const response = await fetch(`${BASE_URL}/restaurants/${restaurantId}/reviews/${reviewId}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -57,8 +57,8 @@ export const updateReviewApi = async (reviewId, body, token) => {
 }
 
 // Chiamata per eliminare una recensione
-export const deleteReviewApi = async (reviewId, token) => {
-  const response = await fetch(`${BASE_URL}/reviews/${reviewId}`, {
+export const deleteReviewApi = async (restaurantId, reviewId, token) => {
+  const response = await fetch(`${BASE_URL}/restaurants/${restaurantId}/reviews/${reviewId}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` }
   })
