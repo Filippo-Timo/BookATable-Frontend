@@ -10,6 +10,9 @@ export const getMenusByRestaurantApi = async (restaurantId, token) => {
   // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 
@@ -27,9 +30,12 @@ export const createMenuApi = async (restaurantId, body, token) => {
     body: JSON.stringify(body)
   })
 
-  // Gestisco eventuali errori
+  // Gestisco eventuali errori — se ci sono errori di validazione li mostro come lista
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 
@@ -46,6 +52,9 @@ export const deleteMenuApi = async (menuId, token) => {
   // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 }

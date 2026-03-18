@@ -9,9 +9,12 @@ export const loginApi = async (credentials) => {
     body: JSON.stringify(credentials)
   })
 
-  // Gestisco eventuali errori
+  // Gestisco eventuali errori — se ci sono errori di validazione li mostro come lista
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 
@@ -26,9 +29,12 @@ export const registerUserApi = async (userData) => {
     body: JSON.stringify(userData)
   })
 
-  // Gestisco eventuali errori
+  // Gestisco eventuali errori — se ci sono errori di validazione li mostro come lista
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 
@@ -43,9 +49,12 @@ export const registerRestaurantOwnerApi = async (userData) => {
     body: JSON.stringify(userData)
   })
 
-  // Gestisco eventuali errori
+  // Gestisco eventuali errori — se ci sono errori di validazione li mostro come lista
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 
@@ -61,6 +70,9 @@ export const getMeApi = async (token) => {
   // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 

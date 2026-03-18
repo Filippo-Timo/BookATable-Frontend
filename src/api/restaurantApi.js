@@ -1,14 +1,18 @@
 // l'indirizzo del backend. Lo salvo in una variabile così se dovesse cambiare basterebbe modificare solo il valore di questa variabile.
 const BASE_URL = "http://localhost:8080/api"
 
-// Chiamata per ottenere tutti i ristoranti 
+// Chiamata per ottenere tutti i ristoranti
 export const getAllRestaurantsApi = async (token) => {
   const response = await fetch(`${BASE_URL}/restaurants`, {
     headers: { Authorization: `Bearer ${token}` }
   })
 
+  // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 
@@ -25,6 +29,9 @@ export const getRestaurantByIdApi = async (id, token) => {
   // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 
@@ -40,6 +47,9 @@ export const getMyRestaurantsApi = async (token) => {
   // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 
@@ -60,6 +70,9 @@ export const uploadRestaurantImageApi = async (id, imageFile, token) => {
   // Gestisco eventuali errori
   if (!response.ok) {
     const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
     throw new Error(error.message)
   }
 

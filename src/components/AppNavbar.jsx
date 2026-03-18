@@ -12,47 +12,73 @@ function AppNavbar() {
     }
 
     return (
-        <Navbar bg="white" className="border-bottom shadow-sm px-4" style={{ height: 58 }}>
+        <Navbar
+            expand="md"
+            className="shadow-sm px-3"
+            style={{ background: "linear-gradient(135deg, #c8102e 0%, #6d0017 100%)", minHeight: 70 }}
+        >
             <Container fluid>
+                {/* Logo */}
                 <Navbar.Brand
-                    className="fw-black me-4"
-                    style={{ color: "#c8102e", fontSize: 19, cursor: "pointer" }}
+                    className="fw-black"
+                    style={{ color: "#fff", fontSize: 19, cursor: "pointer" }}
                     onClick={() => navigate("/")}
                 >
-                    Book<span style={{ color: "#1a1a2e" }}>ATable</span>
+                    Book<span style={{ color: "rgba(255,255,255,0.7)" }}>ATable</span>
                 </Navbar.Brand>
 
-                <Nav className="me-auto">
-                    <Nav.Link onClick={() => navigate("/")} style={{ fontSize: 13, color: "#6b7280", fontWeight: 600 }}>
-                        Scopri
-                    </Nav.Link>
-                    {user?.role === "USER" && (
-                        <Nav.Link onClick={() => navigate("/reservations")} style={{ fontSize: 13, color: "#6b7280", fontWeight: 600 }}>
-                            Le mie prenotazioni
-                        </Nav.Link>
-                    )}
-                    {user?.role === "RESTAURANT_OWNER" && (
-                        <Nav.Link onClick={() => navigate("/dashboard")} style={{ fontSize: 13, color: "#6b7280", fontWeight: 600 }}>
-                            Dashboard
-                        </Nav.Link>
-                    )}
-                </Nav>
+                {/* Hamburger menu per mobile */}
+                <Navbar.Toggle
+                    aria-controls="main-navbar"
+                    style={{ borderColor: "rgba(255,255,255,0.3)" }}
+                >
+                    <span style={{ color: "#fff", fontSize: 20 }}>☰</span>
+                </Navbar.Toggle>
 
-                <div className="d-flex align-items-center gap-2">
-                    {user && (
-                        <span style={{ fontSize: 13, color: "#6b7280", fontWeight: 600 }}>
-                            👤 {user.firstName} {user.lastName}
-                        </span>
-                    )}
-                    <Button
-                        variant="outline-danger"
-                        size="sm"
-                        className="fw-semibold"
-                        onClick={handleLogout}
-                    >
-                        Logout
-                    </Button>
-                </div>
+                <Navbar.Collapse id="main-navbar">
+                    {/* Link di navigazione a sinistra */}
+                    <Nav className="me-auto mt-2 mt-md-0">
+                        <Nav.Link
+                            onClick={() => navigate("/")}
+                            style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 600 }}
+                        >
+                            Scopri
+                        </Nav.Link>
+                        {user?.role === "USER" && (
+                            <Nav.Link
+                                onClick={() => navigate("/reservations")}
+                                style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 600 }}
+                            >
+                                Le mie prenotazioni
+                            </Nav.Link>
+                        )}
+                        {user?.role === "RESTAURANT_OWNER" && (
+                            <Nav.Link
+                                onClick={() => navigate("/dashboard")}
+                                style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 600 }}
+                            >
+                                Dashboard
+                            </Nav.Link>
+                        )}
+                    </Nav>
+
+                    {/* Profilo e logout - allineati a destra su desktop, a destra su mobile */}
+                    <div className="d-flex align-items-center justify-content-end gap-2 mt-2 mt-md-0 pb-2 pb-md-0">
+                        {user && (
+                            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>
+                                👤 {user.firstName} {user.lastName}
+                            </span>
+                        )}
+                        <Button
+                            variant="outline-light"
+                            size="sm"
+                            className="fw-semibold"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </Button>
+                    </div>
+                </Navbar.Collapse>
             </Container>
         </Navbar>
     )

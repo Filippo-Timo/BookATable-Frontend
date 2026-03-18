@@ -39,13 +39,31 @@ function HomePage() {
         <Container className="py-4">
             <h4 className="fw-bold mb-4" style={{ color: "#1a1a2e" }}>Scopri i ristoranti</h4>
 
-            <InputGroup className="mb-4" style={{ maxWidth: 400 }}>
+            <div className="mb-4 position-relative" style={{ maxWidth: 400 }}>
                 <Form.Control
                     placeholder="Cerca per nome o città..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-            </InputGroup>
+                {/* Mostra la X solo se c'è del testo nella barra di ricerca */}
+                {search && (
+                    <span
+                        onClick={() => setSearch("")}
+                        style={{
+                            position: "absolute",
+                            right: 10,
+                            top: "50%",
+                            transform: "translateY(-50%)",
+                            cursor: "pointer",
+                            color: "#6b7280",
+                            fontSize: 18,
+                            lineHeight: 1
+                        }}
+                    >
+                        ×
+                    </span>
+                )}
+            </div>
 
             {filtered.length === 0 ? (
                 <p className="text-muted">Nessun ristorante trovato.</p>

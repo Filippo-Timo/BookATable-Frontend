@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState, useEffect } from "react"
+import { getMeApi } from "../api/authApi"
 
 const AuthContext = createContext()
 
@@ -17,6 +18,22 @@ export function AuthProvider({ children }) {
         setToken(null)
         localStorage.removeItem("token")
     }
+
+    // All'avvio, se c'è un token nel localStorage recupero i dati dell'utente
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (token && !user) {
+                try {
+                    const userData = await getMeApi(token)
+                    setUser(userData)
+                } catch (err) {
+                    // Se il token non è valido faccio il logout
+                    logout()
+                }
+            }
+        }
+        fetchUser()
+    }, [token])
 
     return (
         <AuthContext.Provider value={{ user, token, login, logout }}>

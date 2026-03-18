@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { getRestaurantByIdApi } from "../api/restaurantApi"
 import { getMenusByRestaurantApi } from "../api/menuApi"
-import { getReviewsByRestaurantApi, createReviewApi, deleteReviewApi } from "../api/reviewApi"
+import { getReviewsByRestaurantApi, createReviewApi, deleteReviewApi, updateReviewApi } from "../api/reviewApi"
 
 function RestaurantDetailPage() {
     const { id } = useParams()
@@ -19,6 +19,11 @@ function RestaurantDetailPage() {
     // Stato per il form nuova recensione
     const [reviewForm, setReviewForm] = useState({ rating: 5, comment: "" })
     const [reviewError, setReviewError] = useState(null)
+
+    // Stato per la recensione in modifica — salvo l'id e i dati della recensione che si sta modificando
+    const [editingReviewId, setEditingReviewId] = useState(null)
+    const [editForm, setEditForm] = useState({ rating: 5, comment: "" })
+    const [editError, setEditError] = useState(null)
 
     useEffect(() => {
         // Faccio 3 chiamate in parallelo con Promise.all per ottimizzare i tempi di caricamento
@@ -67,8 +72,39 @@ function RestaurantDetailPage() {
         }
     }
 
+    // Apro il form di modifica per una recensione — precompilo con i dati esistenti
+    const handleStartEdit = (review) => {
+        setEditingReviewId(review.id)
+        setEditForm({ rating: review.rating, comment: review.comment || "" })
+        setEditError(null)
+    }
+
+    // Annullo la modifica e pulisco l'errore
+    const handleCancelEdit = () => {
+        setEditingReviewId(null)
+        setEditForm({ rating: 5, comment: "" })
+        setEditError(null)
+    }
+
+    // Gestisco il salvataggio della modifica
+    const handleEditSubmit = async (e, reviewId) => {
+        e.preventDefault()
+        setEditError(null)
+        try {
+            const updatedReview = await updateReviewApi(id, reviewId, editForm, token)
+            // Aggiorno la recensione nella lista senza ricaricare la pagina
+            setReviews(reviews.map(r => r.id === reviewId ? updatedReview : r))
+            setEditingReviewId(null)
+        } catch (err) {
+            setEditError(err.message)
+        }
+    }
+
     if (loading) return <p className="text-center mt-5">Caricamento...</p>
     if (error) return <p className="text-center mt-5 text-danger">{error}</p>
+
+    // Costruisco il link a Google Maps con nome, indirizzo e città del ristorante
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(restaurant.name + " " + restaurant.address + " " + restaurant.city)}`
 
     return (
         <Container className="py-4">
@@ -81,9 +117,11 @@ function RestaurantDetailPage() {
                 style={{ height: 300, objectFit: "cover", borderRadius: 12 }}
             />
 
-            {/* Info principali del ristorante */}
+            {/* Info principali + Google Maps */}
             <Row className="mb-4">
-                <Col>
+
+                {/* Colonna sinistra - Info ristorante */}
+                <Col md={6}>
                     <Badge className="mb-2" style={{ background: "#c8102e", fontSize: 12 }}>
                         {restaurant.restaurantType}
                     </Badge>
@@ -95,6 +133,64 @@ function RestaurantDetailPage() {
                         <p className="mt-3" style={{ color: "#6b7280" }}>{restaurant.description}</p>
                     )}
                 </Col>
+
+                {/* Colonna destra - Link Google Maps cliccabile */}
+                <Col md={6} className="d-flex align-items-stretch">
+                    <a
+                        href={mapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: "none", width: "100%" }}
+                    >
+                        <div
+                            className="w-100 h-100 d-flex flex-column align-items-center justify-content-center rounded"
+                            style={{
+                                minHeight: 200,
+                                background: "linear-gradient(135deg, #c8102e 0%, #6d0017 100%)",
+                                cursor: "pointer",
+                                position: "relative",
+                                overflow: "hidden",
+                                boxShadow: "0 4px 15px rgba(0,0,0,0.2)"
+                            }}
+                        >
+                            {/* Cerchi decorativi di sfondo */}
+                            <div style={{
+                                position: "absolute",
+                                width: 200,
+                                height: 200,
+                                borderRadius: "50%",
+                                border: "1px solid rgba(255,255,255,0.1)",
+                                top: -50,
+                                right: -50
+                            }} />
+                            <div style={{
+                                position: "absolute",
+                                width: 150,
+                                height: 150,
+                                borderRadius: "50%",
+                                border: "1px solid rgba(255,255,255,0.1)",
+                                bottom: -30,
+                                left: -30
+                            }} />
+
+                            {/* Contenuto */}
+                            <div style={{ fontSize: 48, zIndex: 1 }}>📍</div>
+                            <p className="fw-bold mt-2 mb-1" style={{ color: "#fff", fontSize: 16, zIndex: 1 }}>
+                                Vedi su Google Maps
+                            </p>
+                            <p style={{ color: "rgba(255,255,255,0.6)", fontSize: 13, zIndex: 1, textAlign: "center", padding: "0 20px" }}>
+                                {restaurant.address}, {restaurant.city}
+                            </p>
+                            <div
+                                className="mt-2 px-4 py-2 rounded-pill fw-semibold"
+                                style={{ background: "#c8102e", color: "#fff", fontSize: 13, zIndex: 1 }}
+                            >
+                                Apri mappa →
+                            </div>
+                        </div>
+                    </a>
+                </Col>
+
             </Row>
 
             <hr />
@@ -109,7 +205,6 @@ function RestaurantDetailPage() {
                         {/* Titolo del menu basato sul tipo */}
                         <h5 className="fw-bold" style={{ color: "#c8102e" }}>{menu.menuType}</h5>
                         {menu.dishes && menu.dishes.length === 0 ? (
-                            // Messaggio personalizzato con il tipo del menu
                             <p className="text-muted" style={{ fontSize: 13 }}>Il menu "{menu.menuType}" non è stato ancora aggiunto.</p>
                         ) : (
                             menu.dishes && menu.dishes.map((dish) => (
@@ -145,20 +240,69 @@ function RestaurantDetailPage() {
                             </span>
                             <div className="d-flex align-items-center gap-2">
                                 <span style={{ color: "#c8102e", fontWeight: 700 }}>{"⭐".repeat(review.rating)}</span>
-                                {/* Mostra il bottone elimina solo se la recensione appartiene all'utente loggato */}
+                                {/* Mostra i bottoni modifica ed elimina solo se la recensione appartiene all'utente loggato */}
                                 {user?.id === review.user?.id && (
-                                    <Button
-                                        size="sm"
-                                        variant="outline-danger"
-                                        onClick={() => handleDeleteReview(review.id)}
-                                    >
-                                        Elimina
-                                    </Button>
+                                    <>
+                                        <Button
+                                            size="sm"
+                                            variant="outline-secondary"
+                                            onClick={() => handleStartEdit(review)}
+                                        >
+                                            Modifica
+                                        </Button>
+                                        <Button
+                                            size="sm"
+                                            variant="outline-danger"
+                                            onClick={() => handleDeleteReview(review.id)}
+                                        >
+                                            Elimina
+                                        </Button>
+                                    </>
                                 )}
                             </div>
                         </div>
                         {review.comment && (
                             <p className="mb-0 text-muted" style={{ fontSize: 13 }}>{review.comment}</p>
+                        )}
+
+                        {/* Form di modifica inline - appare solo per la recensione in modifica */}
+                        {editingReviewId === review.id && (
+                            <Form className="mt-3" onSubmit={(e) => handleEditSubmit(e, review.id)}>
+                                <Form.Group className="mb-2">
+                                    <Form.Label className="small fw-bold text-secondary text-uppercase">Valutazione</Form.Label>
+                                    <Form.Select
+                                        value={editForm.rating}
+                                        onChange={(e) => setEditForm({ ...editForm, rating: parseInt(e.target.value) })}
+                                    >
+                                        {[1, 2, 3, 4, 5].map(n => (
+                                            <option key={n} value={n}>{"⭐".repeat(n)} ({n})</option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                                <Form.Group className="mb-2">
+                                    <Form.Label className="small fw-bold text-secondary text-uppercase">Commento</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={2}
+                                        value={editForm.comment}
+                                        onChange={(e) => setEditForm({ ...editForm, comment: e.target.value })}
+                                    />
+                                </Form.Group>
+                                {/* Messaggio di errore inline */}
+                                {editError && (
+                                    <div className="alert alert-danger py-2 mb-2" style={{ fontSize: 13 }}>
+                                        {editError}
+                                    </div>
+                                )}
+                                <div className="d-flex gap-2">
+                                    <Button type="submit" size="sm" style={{ background: "#c8102e", border: "none" }} className="fw-semibold">
+                                        Salva
+                                    </Button>
+                                    <Button type="button" size="sm" variant="outline-secondary" onClick={handleCancelEdit}>
+                                        Annulla
+                                    </Button>
+                                </div>
+                            </Form>
                         )}
                     </div>
                 ))
