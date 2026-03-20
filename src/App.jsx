@@ -4,9 +4,9 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import AppNavbar from "./components/AppNavbar"
 import HomePage from "./pages/HomePage"
 import RestaurantDetailPage from "./pages/RestaurantDetailPage"
+import BookingPage from "./pages/BookingPage"
 
 function App() {
-
   return (
     <BrowserRouter>
       <Routes>
@@ -21,6 +21,12 @@ function App() {
           <ProtectedRoute>
             <AppNavbar />
             <RestaurantDetailPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/restaurants/:id/booking" element={
+          <ProtectedRoute requiredRole="USER">
+            <AppNavbar />
+            <BookingPage />
           </ProtectedRoute>
         } />
       </Routes>
