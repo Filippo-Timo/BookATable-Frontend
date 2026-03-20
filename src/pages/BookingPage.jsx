@@ -79,9 +79,8 @@ function BookingPage() {
                 seatsBooked: parseInt(formData.seatsBooked),
                 seatingPreference: formData.seatingPreference
             }, token)
-            // Dopo la prenotazione mando l'utente alla homepage
-            // TODO: cambiare navigate("/") in navigate("/reservations") quando creeremo la MyReservationsPage
-            navigate("/")
+            // Dopo la prenotazione mando l'utente alla pagina delle prenotazioni
+            navigate("/reservations")
         } catch (err) {
             setError(err.message)
         } finally {

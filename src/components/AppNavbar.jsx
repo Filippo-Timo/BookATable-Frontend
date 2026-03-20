@@ -62,13 +62,34 @@ function AppNavbar() {
                         )}
                     </Nav>
 
-                    {/* Profilo e logout - allineati a destra su desktop, a destra su mobile */}
+                    {/* Profilo e logout - allineati a destra */}
                     <div className="d-flex align-items-center justify-content-end gap-2 mt-2 mt-md-0 pb-2 pb-md-0">
-                        {user && (
+
+                        {/* Avatar + nome cliccabile per USER */}
+                        {user?.role === "USER" && (
+                            <div
+                                onClick={() => navigate("/profile")}
+                                className="d-flex align-items-center gap-2"
+                                style={{ cursor: "pointer" }}
+                            >
+                                <img
+                                    src={user?.avatar || "https://placehold.co/32x32?text=👤"}
+                                    alt="Avatar"
+                                    style={{ width: 32, height: 32, borderRadius: "50%", objectFit: "cover", border: "1px solid rgba(255,255,255,0.7)" }}
+                                />
+                                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>
+                                    {user.firstName} {user.lastName}
+                                </span>
+                            </div>
+                        )}
+
+                        {/* Solo nome per RESTAURANT_OWNER (non ha avatar) */}
+                        {user?.role === "RESTAURANT_OWNER" && (
                             <span style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>
                                 👤 {user.firstName} {user.lastName}
                             </span>
                         )}
+
                         <Button
                             variant="outline-light"
                             size="sm"

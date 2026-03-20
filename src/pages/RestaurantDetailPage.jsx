@@ -122,7 +122,7 @@ function RestaurantDetailPage() {
             <Row className="mb-4">
 
                 {/* Colonna sinistra - Info ristorante */}
-                <Col md={6}>
+                <Col md={6} className="mb-3 mb-md-0">
                     <Badge className="mb-2" style={{ background: "#c8102e", fontSize: 12 }}>
                         {restaurant.restaurantType}
                     </Badge>
@@ -209,162 +209,156 @@ function RestaurantDetailPage() {
 
             {/* Sezione Menu */}
             <h4 className="fw-bold mb-3" style={{ color: "#1a1a2e" }}>📖 Menu</h4>
-            {
-                menus.length === 0 ? (
-                    <p className="text-muted">Nessun menu disponibile.</p>
-                ) : (
-                    menus.map((menu) => (
-                        <div key={menu.id} className="mb-4">
-                            {/* Titolo del menu basato sul tipo */}
-                            <h5 className="fw-bold" style={{ color: "#c8102e" }}>{menu.menuType}</h5>
-                            {menu.dishes && menu.dishes.length === 0 ? (
-                                <p className="text-muted" style={{ fontSize: 13 }}>Il menu "{menu.menuType}" non è stato ancora aggiunto.</p>
-                            ) : (
-                                menu.dishes && menu.dishes.map((dish) => (
-                                    <div key={dish.id} className="d-flex justify-content-between align-items-center py-2 border-bottom">
-                                        <div>
-                                            <p className="mb-0 fw-semibold" style={{ fontSize: 14 }}>{dish.name}</p>
-                                            {dish.description && (
-                                                <p className="mb-0 text-muted" style={{ fontSize: 12 }}>{dish.description}</p>
-                                            )}
-                                        </div>
-                                        <span className="fw-bold" style={{ color: "#c8102e", fontSize: 14 }}>
-                                            €{dish.price}
-                                        </span>
+            {menus.length === 0 ? (
+                <p className="text-muted">Nessun menu disponibile.</p>
+            ) : (
+                menus.map((menu) => (
+                    <div key={menu.id} className="mb-4">
+                        {/* Titolo del menu basato sul tipo */}
+                        <h5 className="fw-bold" style={{ color: "#c8102e" }}>{menu.menuType}</h5>
+                        {menu.dishes && menu.dishes.length === 0 ? (
+                            <p className="text-muted" style={{ fontSize: 13 }}>Il menu "{menu.menuType}" non è stato ancora aggiunto.</p>
+                        ) : (
+                            menu.dishes && menu.dishes.map((dish) => (
+                                <div key={dish.id} className="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                    <div>
+                                        <p className="mb-0 fw-semibold" style={{ fontSize: 14 }}>{dish.name}</p>
+                                        {dish.description && (
+                                            <p className="mb-0 text-muted" style={{ fontSize: 12 }}>{dish.description}</p>
+                                        )}
                                     </div>
-                                ))
-                            )}
-                        </div>
-                    ))
-                )
-            }
+                                    <span className="fw-bold" style={{ color: "#c8102e", fontSize: 14 }}>
+                                        €{dish.price}
+                                    </span>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                ))
+            )}
 
             <hr />
 
             {/* Sezione Recensioni */}
             <h4 className="fw-bold mb-3" style={{ color: "#1a1a2e" }}>⭐ Recensioni</h4>
-            {
-                reviews.length === 0 ? (
-                    <p className="text-muted">Nessuna recensione ancora.</p>
-                ) : (
-                    reviews.map((review) => (
-                        <div key={review.id} className="mb-3 p-3 bg-light rounded">
-                            <div className="d-flex justify-content-between align-items-center mb-1">
-                                <span className="fw-bold" style={{ fontSize: 14 }}>
-                                    👤 {review.user?.firstName} {review.user?.lastName}
-                                </span>
-                                <div className="d-flex align-items-center gap-2">
-                                    <span style={{ color: "#c8102e", fontWeight: 700 }}>{"⭐".repeat(review.rating)}</span>
-                                    {/* Mostra i bottoni modifica ed elimina solo se la recensione appartiene all'utente loggato */}
-                                    {user?.id === review.user?.id && (
-                                        <>
-                                            <Button
-                                                size="sm"
-                                                variant="outline-secondary"
-                                                onClick={() => handleStartEdit(review)}
-                                            >
-                                                Modifica
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="outline-danger"
-                                                onClick={() => handleDeleteReview(review.id)}
-                                            >
-                                                Elimina
-                                            </Button>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                            {review.comment && (
-                                <p className="mb-0 text-muted" style={{ fontSize: 13 }}>{review.comment}</p>
-                            )}
-
-                            {/* Form di modifica inline - appare solo per la recensione in modifica */}
-                            {editingReviewId === review.id && (
-                                <Form className="mt-3" onSubmit={(e) => handleEditSubmit(e, review.id)}>
-                                    <Form.Group className="mb-2">
-                                        <Form.Label className="small fw-bold text-secondary text-uppercase">Valutazione</Form.Label>
-                                        <Form.Select
-                                            value={editForm.rating}
-                                            onChange={(e) => setEditForm({ ...editForm, rating: parseInt(e.target.value) })}
+            {reviews.length === 0 ? (
+                <p className="text-muted">Nessuna recensione ancora.</p>
+            ) : (
+                reviews.map((review) => (
+                    <div key={review.id} className="mb-3 p-3 bg-light rounded">
+                        <div className="d-flex justify-content-between align-items-center mb-1">
+                            <span className="fw-bold" style={{ fontSize: 14 }}>
+                                👤 {review.user?.firstName} {review.user?.lastName}
+                            </span>
+                            <div className="d-flex align-items-center gap-2">
+                                <span style={{ color: "#c8102e", fontWeight: 700 }}>{"⭐".repeat(review.rating)}</span>
+                                {/* Mostra i bottoni modifica ed elimina solo se la recensione appartiene all'utente loggato */}
+                                {user?.id === review.user?.id && (
+                                    <>
+                                        <Button
+                                            size="sm"
+                                            variant="outline-secondary"
+                                            onClick={() => handleStartEdit(review)}
                                         >
-                                            {[1, 2, 3, 4, 5].map(n => (
-                                                <option key={n} value={n}>{"⭐".repeat(n)} ({n})</option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Form.Group className="mb-2">
-                                        <Form.Label className="small fw-bold text-secondary text-uppercase">Commento</Form.Label>
-                                        <Form.Control
-                                            as="textarea"
-                                            rows={2}
-                                            value={editForm.comment}
-                                            onChange={(e) => setEditForm({ ...editForm, comment: e.target.value })}
-                                        />
-                                    </Form.Group>
-                                    {/* Messaggio di errore inline */}
-                                    {editError && (
-                                        <div className="alert alert-danger py-2 mb-2" style={{ fontSize: 13 }}>
-                                            {editError}
-                                        </div>
-                                    )}
-                                    <div className="d-flex gap-2">
-                                        <Button type="submit" size="sm" style={{ background: "#c8102e", border: "none" }} className="fw-semibold">
-                                            Salva
+                                            Modifica
                                         </Button>
-                                        <Button type="button" size="sm" variant="outline-secondary" onClick={handleCancelEdit}>
-                                            Annulla
+                                        <Button
+                                            size="sm"
+                                            variant="outline-danger"
+                                            onClick={() => handleDeleteReview(review.id)}
+                                        >
+                                            Elimina
                                         </Button>
-                                    </div>
-                                </Form>
-                            )}
+                                    </>
+                                )}
+                            </div>
                         </div>
-                    ))
-                )
-            }
+                        {review.comment && (
+                            <p className="mb-0 text-muted" style={{ fontSize: 13 }}>{review.comment}</p>
+                        )}
+
+                        {/* Form di modifica inline - appare solo per la recensione in modifica */}
+                        {editingReviewId === review.id && (
+                            <Form className="mt-3" onSubmit={(e) => handleEditSubmit(e, review.id)}>
+                                <Form.Group className="mb-2">
+                                    <Form.Label className="small fw-bold text-secondary text-uppercase">Valutazione</Form.Label>
+                                    <Form.Select
+                                        value={editForm.rating}
+                                        onChange={(e) => setEditForm({ ...editForm, rating: parseInt(e.target.value) })}
+                                    >
+                                        {[1, 2, 3, 4, 5].map(n => (
+                                            <option key={n} value={n}>{"⭐".repeat(n)} ({n})</option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
+                                <Form.Group className="mb-2">
+                                    <Form.Label className="small fw-bold text-secondary text-uppercase">Commento</Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        rows={2}
+                                        value={editForm.comment}
+                                        onChange={(e) => setEditForm({ ...editForm, comment: e.target.value })}
+                                    />
+                                </Form.Group>
+                                {/* Messaggio di errore inline */}
+                                {editError && (
+                                    <div className="alert alert-danger py-2 mb-2" style={{ fontSize: 13 }}>
+                                        {editError}
+                                    </div>
+                                )}
+                                <div className="d-flex gap-2">
+                                    <Button type="submit" size="sm" style={{ background: "#c8102e", border: "none" }} className="fw-semibold">
+                                        Salva
+                                    </Button>
+                                    <Button type="button" size="sm" variant="outline-secondary" onClick={handleCancelEdit}>
+                                        Annulla
+                                    </Button>
+                                </div>
+                            </Form>
+                        )}
+                    </div>
+                ))
+            )}
 
             {/* Form nuova recensione - solo per USER */}
-            {
-                user?.role === "USER" && (
-                    <div className="mt-4">
-                        <h5 className="fw-bold mb-3" style={{ color: "#1a1a2e" }}>Lascia una recensione</h5>
-                        <Form onSubmit={handleReviewSubmit}>
-                            <Form.Group className="mb-3">
-                                <Form.Label className="small fw-bold text-secondary text-uppercase">Valutazione</Form.Label>
-                                <Form.Select
-                                    value={reviewForm.rating}
-                                    onChange={(e) => setReviewForm({ ...reviewForm, rating: parseInt(e.target.value) })}
-                                >
-                                    {[1, 2, 3, 4, 5].map(n => (
-                                        <option key={n} value={n}>{"⭐".repeat(n)} ({n})</option>
-                                    ))}
-                                </Form.Select>
-                            </Form.Group>
-                            <Form.Group className="mb-3">
-                                <Form.Label className="small fw-bold text-secondary text-uppercase">Commento</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows={3}
-                                    value={reviewForm.comment}
-                                    onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
-                                    placeholder="Scrivi la tua esperienza..."
-                                />
-                            </Form.Group>
-                            {reviewError && (
-                                <div className="alert alert-danger py-2 mb-3" style={{ fontSize: 13 }}>
-                                    {reviewError}
-                                </div>
-                            )}
-                            <Button type="submit" style={{ background: "#c8102e", border: "none" }} className="fw-bold">
-                                Pubblica recensione
-                            </Button>
-                        </Form>
-                    </div>
-                )
-            }
+            {user?.role === "USER" && (
+                <div className="mt-4">
+                    <h5 className="fw-bold mb-3" style={{ color: "#1a1a2e" }}>Lascia una recensione</h5>
+                    <Form onSubmit={handleReviewSubmit}>
+                        <Form.Group className="mb-3">
+                            <Form.Label className="small fw-bold text-secondary text-uppercase">Valutazione</Form.Label>
+                            <Form.Select
+                                value={reviewForm.rating}
+                                onChange={(e) => setReviewForm({ ...reviewForm, rating: parseInt(e.target.value) })}
+                            >
+                                {[1, 2, 3, 4, 5].map(n => (
+                                    <option key={n} value={n}>{"⭐".repeat(n)} ({n})</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label className="small fw-bold text-secondary text-uppercase">Commento</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={reviewForm.comment}
+                                onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                                placeholder="Scrivi la tua esperienza..."
+                            />
+                        </Form.Group>
+                        {reviewError && (
+                            <div className="alert alert-danger py-2 mb-3" style={{ fontSize: 13 }}>
+                                {reviewError}
+                            </div>
+                        )}
+                        <Button type="submit" style={{ background: "#c8102e", border: "none" }} className="fw-bold">
+                            Pubblica recensione
+                        </Button>
+                    </Form>
+                </div>
+            )}
 
-        </Container >
+        </Container>
     )
 }
 
