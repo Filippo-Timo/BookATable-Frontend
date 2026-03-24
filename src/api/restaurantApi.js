@@ -56,6 +56,69 @@ export const getMyRestaurantsApi = async (token) => {
   return response.json()
 }
 
+// Chiamata per creare un nuovo ristorante
+export const createRestaurantApi = async (body, token) => {
+  const response = await fetch(`${BASE_URL}/restaurants`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  })
+
+  // Gestisco eventuali errori — se ci sono errori di validazione li mostro come lista
+  if (!response.ok) {
+    const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
+    throw new Error(error.message)
+  }
+
+  return response.json()
+}
+
+// Chiamata per aggiornare un ristorante
+export const updateRestaurantApi = async (id, body, token) => {
+  const response = await fetch(`${BASE_URL}/restaurants/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(body)
+  })
+
+  // Gestisco eventuali errori — se ci sono errori di validazione li mostro come lista
+  if (!response.ok) {
+    const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
+    throw new Error(error.message)
+  }
+
+  return response.json()
+}
+
+// Chiamata per eliminare un ristorante
+export const deleteRestaurantApi = async (id, token) => {
+  const response = await fetch(`${BASE_URL}/restaurants/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  })
+
+  // Gestisco eventuali errori
+  if (!response.ok) {
+    const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
+    throw new Error(error.message)
+  }
+}
+
 // Chiamata per fare l'upload dell'immagine del ristorante
 export const uploadRestaurantImageApi = async (id, imageFile, token) => {
   const formData = new FormData()
