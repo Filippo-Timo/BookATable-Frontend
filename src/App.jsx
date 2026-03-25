@@ -9,6 +9,7 @@ import MyReservationsPage from "./pages/MyReservationsPage"
 import ProfilePage from "./pages/ProfilePage"
 import DashboardPage from "./pages/DashboardPage"
 import ManageRestaurantPage from "./pages/ManageRestaurantPage"
+import ManageMenuPage from "./pages/ManageMenuPage"
 
 function App() {
   return (
@@ -51,18 +52,23 @@ function App() {
             <DashboardPage />
           </ProtectedRoute>
         } />
-        {/* Rotta per creare un nuovo ristorante */}
         <Route path="/dashboard/new" element={
           <ProtectedRoute requiredRole="RESTAURANT_OWNER">
             <AppNavbar />
             <ManageRestaurantPage />
           </ProtectedRoute>
         } />
-        {/* Rotta per modificare un ristorante esistente */}
         <Route path="/dashboard/restaurants/:id" element={
           <ProtectedRoute requiredRole="RESTAURANT_OWNER">
             <AppNavbar />
             <ManageRestaurantPage />
+          </ProtectedRoute>
+        } />
+        {/* Rotta per gestire il menu di un ristorante */}
+        <Route path="/dashboard/restaurants/:id/menu" element={
+          <ProtectedRoute requiredRole="RESTAURANT_OWNER">
+            <AppNavbar />
+            <ManageMenuPage />
           </ProtectedRoute>
         } />
       </Routes>
