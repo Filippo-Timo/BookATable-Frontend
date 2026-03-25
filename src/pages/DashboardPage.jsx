@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { getMyRestaurantsApi } from "../api/restaurantApi"
+import BackButton from "../components/BackButton"
 
 function DashboardPage() {
     const { token } = useAuth()
@@ -32,6 +33,9 @@ function DashboardPage() {
 
     return (
         <Container className="py-4">
+
+            <BackButton />
+
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h4 className="fw-bold mb-0" style={{ color: "#1a1a2e" }}>🍽️ I miei ristoranti</h4>
                 {/* Bottone per creare un nuovo ristorante */}

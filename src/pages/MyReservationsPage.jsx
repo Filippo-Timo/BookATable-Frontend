@@ -3,6 +3,7 @@ import { Container, Row, Col, Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { getMyReservationsApi, deleteReservationApi } from "../api/reservationApi"
+import BackButton from "../components/BackButton"
 
 function MyReservationsPage() {
     const { token } = useAuth()
@@ -43,6 +44,9 @@ function MyReservationsPage() {
 
     return (
         <Container className="py-4">
+
+            <BackButton />
+
             <h4 className="fw-bold mb-4" style={{ color: "#1a1a2e" }}>📋 Le mie prenotazioni</h4>
 
             {reservations.length === 0 ? (

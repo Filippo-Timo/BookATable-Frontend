@@ -10,6 +10,9 @@ import ProfilePage from "./pages/ProfilePage"
 import DashboardPage from "./pages/DashboardPage"
 import ManageRestaurantPage from "./pages/ManageRestaurantPage"
 import ManageMenuPage from "./pages/ManageMenuPage"
+import OwnerReservationsPage from "./pages/OwnerReservationsPage"
+import OwnerProfilePage from "./pages/OwnerProfilePage"
+import Footer from "./components/Footer"
 
 function App() {
   return (
@@ -64,14 +67,26 @@ function App() {
             <ManageRestaurantPage />
           </ProtectedRoute>
         } />
-        {/* Rotta per gestire il menu di un ristorante */}
         <Route path="/dashboard/restaurants/:id/menu" element={
           <ProtectedRoute requiredRole="RESTAURANT_OWNER">
             <AppNavbar />
             <ManageMenuPage />
           </ProtectedRoute>
         } />
+        <Route path="/dashboard/restaurants/:id/reservations" element={
+          <ProtectedRoute requiredRole="RESTAURANT_OWNER">
+            <AppNavbar />
+            <OwnerReservationsPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/owner-profile" element={
+          <ProtectedRoute requiredRole="RESTAURANT_OWNER">
+            <AppNavbar />
+            <OwnerProfilePage />
+          </ProtectedRoute>
+        } />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }

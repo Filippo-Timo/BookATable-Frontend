@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { getMenusByRestaurantApi, createMenuApi, deleteMenuApi } from "../api/menuApi"
 import { createDishApi, updateDishApi, deleteDishApi } from "../api/dishApi"
+import BackButton from "../components/BackButton"
 
 function ManageMenuPage() {
     const { id } = useParams()
@@ -143,6 +144,9 @@ function ManageMenuPage() {
 
     return (
         <Container className="py-4">
+
+            <BackButton />
+
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h4 className="fw-bold mb-0" style={{ color: "#1a1a2e" }}>📖 Gestisci menu</h4>
                 <Button

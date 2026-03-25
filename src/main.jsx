@@ -6,6 +6,8 @@ import { AuthProvider } from './context/AuthContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <AuthProvider>
-    <App />
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <App />
+    </div>
   </AuthProvider>
 )

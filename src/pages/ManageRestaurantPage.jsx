@@ -3,6 +3,7 @@ import { Container, Row, Col, Form, Button } from "react-bootstrap"
 import { useParams, useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { createRestaurantApi, updateRestaurantApi, deleteRestaurantApi, getRestaurantByIdApi, uploadRestaurantImageApi } from "../api/restaurantApi"
+import BackButton from "../components/BackButton"
 
 function ManageRestaurantPage() {
     const { id } = useParams()
@@ -108,6 +109,9 @@ function ManageRestaurantPage() {
 
     return (
         <Container className="py-4">
+
+            <BackButton />
+
             <Row className="justify-content-center">
                 <Col xs={12} md={8}>
 

@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext"
 import { createReservationApi } from "../api/reservationApi"
 import { getRestaurantByIdApi } from "../api/restaurantApi"
 import { getWeatherSuggestionApi } from "../api/weatherApi"
+import BackButton from "../components/BackButton"
 
 function BookingPage() {
     const { id } = useParams()
@@ -90,6 +91,9 @@ function BookingPage() {
 
     return (
         <Container className="py-4">
+
+            <BackButton />
+
             <Row className="justify-content-center">
                 <Col xs={12} md={6}>
 

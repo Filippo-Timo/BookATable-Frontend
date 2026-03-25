@@ -2,14 +2,14 @@ import { useState } from "react"
 import { Container, Row, Col, Form, Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
-import { updateUserApi, uploadAvatarApi, deleteUserApi } from "../api/userApi"
+import { updateUserApi, deleteUserApi } from "../api/userApi"
 import BackButton from "../components/BackButton"
 
-function ProfilePage() {
+function OwnerProfilePage() {
     const { user, token, login, logout } = useAuth()
     const navigate = useNavigate()
 
-    // Precompilo il form con i dati dell'utente loggato
+    // Precompilo il form con i dati dell'owner loggato
     const [formData, setFormData] = useState({
         firstName: user?.firstName || "",
         lastName: user?.lastName || "",
@@ -42,19 +42,6 @@ function ProfilePage() {
         }
     }
 
-    // Gestisco l'upload dell'avatar
-    const handleAvatarChange = async (e) => {
-        const file = e.target.files[0]
-        if (!file) return
-        try {
-            const updatedUser = await uploadAvatarApi(file, token)
-            // Aggiorno i dati dell'utente nel context con il nuovo avatar
-            login(updatedUser, token)
-        } catch (err) {
-            setError(err.message)
-        }
-    }
-
     // Gestisco l'eliminazione dell'account
     const handleDelete = async () => {
         if (!window.confirm("Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile!")) return
@@ -76,32 +63,6 @@ function ProfilePage() {
                 <Col xs={12} md={6}>
 
                     <h4 className="fw-bold mb-4" style={{ color: "#1a1a2e" }}>👤 Il mio profilo</h4>
-
-                    {/* Avatar */}
-                    <div className="d-flex align-items-center gap-3 mb-4">
-                        <img
-                            src={user?.avatar || "https://placehold.co/80x80?text=Avatar"}
-                            alt="Avatar"
-                            style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", border: "3px solid #c8102e" }}
-                        />
-                        <div>
-                            <p className="mb-1 fw-bold" style={{ color: "#1a1a2e" }}>{user?.firstName} {user?.lastName}</p>
-                            <label
-                                htmlFor="avatarInput"
-                                className="btn btn-sm fw-semibold"
-                                style={{ background: "#c8102e", color: "#fff", border: "none", cursor: "pointer" }}
-                            >
-                                Cambia foto
-                            </label>
-                            <input
-                                id="avatarInput"
-                                type="file"
-                                accept="image/*"
-                                style={{ display: "none" }}
-                                onChange={handleAvatarChange}
-                            />
-                        </div>
-                    </div>
 
                     {/* Form aggiornamento profilo */}
                     <Form onSubmit={handleSubmit}>
@@ -198,4 +159,4 @@ function ProfilePage() {
     )
 }
 
-export default ProfilePage
+export default OwnerProfilePage

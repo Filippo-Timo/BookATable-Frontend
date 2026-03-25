@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext"
 import { getRestaurantByIdApi } from "../api/restaurantApi"
 import { getMenusByRestaurantApi } from "../api/menuApi"
 import { getReviewsByRestaurantApi, createReviewApi, deleteReviewApi, updateReviewApi } from "../api/reviewApi"
+import BackButton from "../components/BackButton"
 
 function RestaurantDetailPage() {
     const { id } = useParams()
@@ -109,6 +110,8 @@ function RestaurantDetailPage() {
 
     return (
         <Container className="py-4">
+
+            <BackButton />
 
             {/* Immagine grande del ristorante */}
             <img

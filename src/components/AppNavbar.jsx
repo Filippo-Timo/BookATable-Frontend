@@ -83,11 +83,17 @@ function AppNavbar() {
                             </div>
                         )}
 
-                        {/* Solo nome per RESTAURANT_OWNER (non ha avatar) */}
+                        {/* Nome cliccabile per RESTAURANT_OWNER — porta al profilo owner */}
                         {user?.role === "RESTAURANT_OWNER" && (
-                            <span style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>
-                                👤 {user.firstName} {user.lastName}
-                            </span>
+                            <div
+                                onClick={() => navigate("/owner-profile")}
+                                className="d-flex align-items-center gap-2"
+                                style={{ cursor: "pointer" }}
+                            >
+                                <span style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>
+                                    👤 {user.firstName} {user.lastName}
+                                </span>
+                            </div>
                         )}
 
                         <Button
