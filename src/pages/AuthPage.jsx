@@ -2,11 +2,14 @@ import { useState } from "react"
 import { Container, Row, Col, Form, Button } from "react-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
-import { loginApi, registerUserApi, getMeApi } from "../api/authApi"
+import { loginApi, registerUserApi, registerRestaurantOwnerApi, getMeApi } from "../api/authApi"
 
 function AuthPage() {
     // Gestisce se mostrare il form di login o di registrazione. Di default mostra il login.
     const [mode, setMode] = useState("login")
+
+    // Gestisce il tipo di utente che si vuole registrare. Di default è utente normale.
+    const [registerType, setRegisterType] = useState("user")
 
     // Un unico oggetto che contiene tutti i campi del form.
     const [formData, setFormData] = useState({
@@ -45,12 +48,29 @@ function AuthPage() {
         }
     }
 
-    // Chiamo il backend con tutti i dati del form, se ha successo mando l'utente nel form di login altrimenti mostro un errore
+    // Chiamo il backend con tutti i dati del form — in base al tipo di utente scelto
+    // chiamo registerUserApi (con birthDate e city) o registerRestaurantOwnerApi (senza)
     const handleRegister = async (e) => {
         e.preventDefault()
         setError(null)
         try {
-            await registerUserApi(formData)
+            if (registerType === "user") {
+                await registerUserApi({
+                    email: formData.email,
+                    password: formData.password,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    birthDate: formData.birthDate,
+                    city: formData.city
+                })
+            } else {
+                await registerRestaurantOwnerApi({
+                    email: formData.email,
+                    password: formData.password,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName
+                })
+            }
             setMode("login")
         } catch (err) {
             setError(err.message)
@@ -121,6 +141,27 @@ function AuthPage() {
                         {/* Mostra il form di Register in base al mode. */}
                         {mode === "register" && (
                             <Form onSubmit={handleRegister}>
+
+                                {/* Toggle tipo utente — Utente o Ristoratore */}
+                                <div className="d-flex bg-light rounded p-1 mb-3">
+                                    {["user", "owner"].map((t) => (
+                                        <button
+                                            key={t}
+                                            type="button"
+                                            onClick={() => setRegisterType(t)}
+                                            className="flex-fill border-0 py-2 rounded fw-semibold"
+                                            style={{
+                                                fontSize: 13,
+                                                background: registerType === t ? "#fff" : "transparent",
+                                                color: registerType === t ? "#c8102e" : "#6b7280",
+                                                boxShadow: registerType === t ? "0 2px 8px rgba(0,0,0,.1)" : "none",
+                                                cursor: "pointer"
+                                            }}>
+                                            {t === "user" ? "👤 Utente" : "🍽️ Ristoratore"}
+                                        </button>
+                                    ))}
+                                </div>
+
                                 <Row className="g-2">
                                     <Col>
                                         <Form.Group className="mb-3">
@@ -143,14 +184,21 @@ function AuthPage() {
                                     <Form.Label className="small fw-bold text-secondary text-uppercase">Password</Form.Label>
                                     <Form.Control type="password" name="password" value={formData.password} onChange={handleChange} placeholder="••••••••" required />
                                 </Form.Group>
-                                <Form.Group className="mb-3">
-                                    <Form.Label className="small fw-bold text-secondary text-uppercase">Data di nascita</Form.Label>
-                                    <Form.Control type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
-                                </Form.Group>
-                                <Form.Group className="mb-4">
-                                    <Form.Label className="small fw-bold text-secondary text-uppercase">Città</Form.Label>
-                                    <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} placeholder="Roma" required />
-                                </Form.Group>
+
+                                {/* Campi aggiuntivi solo per l'utente normale */}
+                                {registerType === "user" && (
+                                    <>
+                                        <Form.Group className="mb-3">
+                                            <Form.Label className="small fw-bold text-secondary text-uppercase">Data di nascita</Form.Label>
+                                            <Form.Control type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} required />
+                                        </Form.Group>
+                                        <Form.Group className="mb-4">
+                                            <Form.Label className="small fw-bold text-secondary text-uppercase">Città</Form.Label>
+                                            <Form.Control type="text" name="city" value={formData.city} onChange={handleChange} placeholder="Roma" required />
+                                        </Form.Group>
+                                    </>
+                                )}
+
                                 {/* Mostro il messaggio di errore in rosso solo se error non è null. */}
                                 {error && (
                                     <div className="alert alert-danger py-2 mb-3" style={{ fontSize: 13 }}>
