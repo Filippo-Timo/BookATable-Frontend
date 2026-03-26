@@ -48,9 +48,15 @@ function Footer() {
                             Scopri i ristoranti
                         </p>
 
-                        {/* Come funziona - per ora statico */}
-                        <p className="mb-0" style={{ fontSize: 13 }}>
-                            Come funziona?
+                        {/* Come funziona */}
+                        <p
+                            className="mb-0"
+                            style={linkStyle("how")}
+                            onClick={() => navigate("/how-it-works")}
+                            onMouseEnter={() => setHovered("how")}
+                            onMouseLeave={() => setHovered(null)}
+                        >
+                            Come funziona
                         </p>
 
                         {/* Link diverso in base al ruolo */}

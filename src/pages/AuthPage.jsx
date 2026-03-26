@@ -78,8 +78,23 @@ function AuthPage() {
     }
 
     return (
-        <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center" style={{ background: "#f1f3f6" }}>
-            <Row className="shadow rounded overflow-hidden bg-white" style={{ maxWidth: 800, width: "100%" }}>
+        <Container fluid className="min-vh-100 d-flex align-items-center justify-content-center"
+            style={{
+                backgroundImage: "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                position: "relative"
+            }}>
+
+            {/* Overlay scuro per ridurre l'intensità dell'immagine */}
+            <div style={{
+                position: "absolute",
+                top: 0, left: 0, right: 0, bottom: 0,
+                background: "rgba(0,0,0,0.5)"
+            }} />
+
+            <Row className="shadow rounded overflow-hidden bg-white" style={{ maxWidth: 800, width: "100%", position: "relative", zIndex: 1 }}>
 
                 {/* Pannello sinistro */}
                 <Col md={5} className="d-flex flex-column align-items-center justify-content-center p-5 text-white" style={{ background: "linear-gradient(145deg, #c8102e, #6d0017)" }}>
