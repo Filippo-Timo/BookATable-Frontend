@@ -20,6 +20,24 @@ export const getAllRestaurantsApi = async (token) => {
   return data.content
 }
 
+// Chiamata per ottenere i ristoranti filtrati per città
+export const getRestaurantsByCityApi = async (city, token) => {
+  const response = await fetch(`${BASE_URL}/restaurants/city/${encodeURIComponent(city)}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+
+  // Gestisco eventuali errori
+  if (!response.ok) {
+    const error = await response.json()
+    if (error.errors && error.errors.length > 0) {
+      throw new Error(error.errors.join(", "))
+    }
+    throw new Error(error.message)
+  }
+
+  return response.json()
+}
+
 // Chiamata per cercare un ristorante tramite ID
 export const getRestaurantByIdApi = async (id, token) => {
   const response = await fetch(`${BASE_URL}/restaurants/${id}`, {
