@@ -1,9 +1,10 @@
 // l'indirizzo del backend. Lo salvo in una variabile così se dovesse cambiare basterebbe modificare solo il valore di questa variabile.
 const BASE_URL = "http://localhost:8080/api"
 
-// Chiamata per ottenere tutti i ristoranti
-export const getAllRestaurantsApi = async (token) => {
-  const response = await fetch(`${BASE_URL}/restaurants`, {
+// Chiamata per ottenere tutti i ristoranti con paginazione e filtro opzionale per tipologia
+export const getAllRestaurantsApi = async (token, page = 0, restaurantType = "") => {
+  const typeParam = restaurantType ? `&restaurantType=${restaurantType}` : ""
+  const response = await fetch(`${BASE_URL}/restaurants?size=9&page=${page}${typeParam}`, {
     headers: { Authorization: `Bearer ${token}` }
   })
 
@@ -16,8 +17,7 @@ export const getAllRestaurantsApi = async (token) => {
     throw new Error(error.message)
   }
 
-  const data = await response.json()
-  return data.content
+  return response.json()
 }
 
 // Chiamata per ottenere i ristoranti filtrati per città

@@ -90,6 +90,7 @@ function ManageRestaurantPage() {
         if (!file) return
         try {
             const updatedRestaurant = await uploadRestaurantImageApi(id, file, token)
+            // Aggiorno l'immagine del ristorante senza ricaricare la pagina
             setRestaurant(updatedRestaurant)
         } catch (err) {
             setError(err.message)
@@ -109,9 +110,7 @@ function ManageRestaurantPage() {
 
     return (
         <Container className="py-4">
-
             <BackButton />
-
             <Row className="justify-content-center">
                 <Col xs={12} md={8}>
 
@@ -184,6 +183,7 @@ function ManageRestaurantPage() {
                             />
                         </Form.Group>
 
+                        {/* Select tipologia — valori allineati all'enum RestaurantType del backend */}
                         <Form.Group className="mb-3">
                             <Form.Label className="small fw-bold text-secondary text-uppercase">Tipo di ristorante</Form.Label>
                             <Form.Select
@@ -194,13 +194,17 @@ function ManageRestaurantPage() {
                                 <option value="RESTAURANT">Ristorante</option>
                                 <option value="PIZZERIA">Pizzeria</option>
                                 <option value="SUSHI">Sushi</option>
-                                <option value="BURGER">Burger</option>
+                                <option value="FAST_FOOD">Fast Food</option>
                                 <option value="VEGAN">Vegan</option>
                                 <option value="STEAKHOUSE">Steakhouse</option>
-                                <option value="CAFE">Cafè</option>
-                                <option value="BAKERY">Bakery</option>
                                 <option value="SEAFOOD">Seafood</option>
                                 <option value="MEXICAN">Mexican</option>
+                                <option value="CHINESE">Chinese</option>
+                                <option value="BISTROT">Bistrot</option>
+                                <option value="OSTERIA">Osteria</option>
+                                <option value="TRATTORIA">Trattoria</option>
+                                <option value="FINE_DINING">Fine Dining</option>
+                                <option value="OTHER">Altro</option>
                             </Form.Select>
                         </Form.Group>
 
