@@ -10,6 +10,8 @@ function OwnerProfilePage() {
     const navigate = useNavigate()
 
     // Precompilo il form con i dati dell'owner loggato
+    // city e birthDate non sono visibili nel form ma vengono mandati al backend
+    // per soddisfare la validazione dell'UpdateUserDTO
     const [formData, setFormData] = useState({
         firstName: user?.firstName || "",
         lastName: user?.lastName || "",
@@ -25,6 +27,7 @@ function OwnerProfilePage() {
     }
 
     // Gestisco l'aggiornamento dei dati del profilo
+    // Mando tutti i campi al backend anche se city e birthDate non sono visibili nel form
     const handleSubmit = async (e) => {
         e.preventDefault()
         setError(null)
@@ -65,6 +68,7 @@ function OwnerProfilePage() {
                     <h4 className="fw-bold mb-4" style={{ color: "#1a1a2e" }}>👤 Il mio profilo</h4>
 
                     {/* Form aggiornamento profilo */}
+                    {/* Il ristoratore può modificare solo nome e cognome */}
                     <Form onSubmit={handleSubmit}>
                         <Row className="g-2">
                             <Col>
@@ -92,26 +96,6 @@ function OwnerProfilePage() {
                                 </Form.Group>
                             </Col>
                         </Row>
-                        <Form.Group className="mb-3">
-                            <Form.Label className="small fw-bold text-secondary text-uppercase">Città</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name="city"
-                                value={formData.city}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group className="mb-4">
-                            <Form.Label className="small fw-bold text-secondary text-uppercase">Data di nascita</Form.Label>
-                            <Form.Control
-                                type="date"
-                                name="birthDate"
-                                value={formData.birthDate}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Form.Group>
 
                         {/* Messaggi di errore e successo */}
                         {error && (
